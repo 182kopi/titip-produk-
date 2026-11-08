@@ -1,1 +1,88 @@
-assets 
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f1f5f9;color:#1e293b}
+button{cursor:pointer;border:none}
+input,select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:10px;outline:none;background:#fff}
+.card{background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.06);padding:16px}
+.badge{font-size:11px;padding:4px 10px;border-radius:999px;font-weight:700;display:inline-block}
+.badge-green{background:#dcfce7;color:#166534}.badge-red{background:#fee2e2;color:#991b1b}.badge-yellow{background:#fefce8;color:#854d0e}.badge-blue{background:#dbeafe;color:#1e40af}.badge-purple{background:#ede9fe;color:#6d28d9}.badge-gray{background:#f1f5f9;color:#475569}
+.btn{padding:10px 16px;border-radius:999px;font-weight:700;color:#fff;background:#0f172a;font-size:13px}
+.btn-blue{background:#1d4ed8}.btn-green{background:#15803d}.btn-yellow{background:#eab308;color:#0f172a}.btn-red{background:#dc2626}.btn-gray{background:#e2e8f0;color:#0f172a}.btn-purple{background:#7c3aed}.btn-orange{background:#ea580c}
+.btn-sm{padding:6px 10px;font-size:11px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+.flex{display:flex;gap:10px;align-items:center}.flex-col{display:flex;flex-direction:column;gap:8px}.between{justify-content:space-between}.wrap{flex-wrap:wrap}.mt{margin-top:14px}.small{font-size:12px}.muted{color:#64748b;font-size:12px}.blue{color:#1d4ed8}.green{color:#15803d}.orange{color:#ea580c}.red{color:#dc2626}.purple{color:#7c3aed}
+.sidebar{width:260px;background:#0f172a;color:#fff;position:fixed;height:100vh;padding:16px;display:flex;flex-direction:column;z-index:20}
+.logo{display:flex;gap:10px;align-items:center}.logo-icon{width:42px;height:42px;background:#facc15;color:#0f172a;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px}.logo-title{font-weight:800}.logo-sub{font-size:11px;opacity:.6}
+.user-card{background:rgba(255,255,255,.1);border-radius:12px;padding:12px;margin-top:16px;display:flex;gap:10px;align-items:center}.avatar{width:36px;height:36px;background:#facc15;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#0f172a}
+.sidebar nav{margin-top:16px;display:flex;flex-direction:column;gap:4px;flex:1}
+.sidebar nav button{width:100%;text-align:left;padding:10px 12px;border-radius:10px;background:transparent;color:#fff}
+.sidebar nav button.active{background:#fff;color:#0f172a}
+.main{margin-left:260px;padding:20px;padding-bottom:60px}
+.topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.page{display:none}.page.active{display:block}
+.table-wrap{overflow:auto}.info-box{background:#fefce8;padding:12px;border-radius:12px;font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:12px}th{padding:10px;text-align:left;background:#f8fafc}td{padding:10px;border-top:1px solid #e2e8f0;vertical-align:top}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:none;align-items:center;justify-content:center;padding:16px}.modal.open{display:flex}
+.modal-box{background:#fff;width:100%;max-width:580px;border-radius:20px;padding:20px;max-height:92vh;overflow:auto}
+.bar{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden}.bar-fill{height:100%;background:#0f172a}
+.hidden{display:none!important}
+@media(max-width:768px){.sidebar{display:none}.main{margin-left:0}.grid3,.grid4{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+/* === MENU BAWAH HP ALA GOFOOD === */
+.bottom-nav{
+  display:none;
+  position:fixed;
+  bottom:0; left:0; right:0;
+  background:#fff;
+  border-top:1px solid #e2e8f0;
+  box-shadow:0 -4px 20px rgba(0,0,0,.08);
+  z-index:99;
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  justify-content:space-around;
+}
+.bottom-nav button{
+  background:none;
+  color:#64748b;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  font-size:20px;
+  padding:6px 2px;
+  min-width:48px;
+  border-radius:12px;
+}
+.bottom-nav button span{
+  font-size:10px;
+  font-weight:700;
+}
+.bottom-nav button.active{
+  color:#0f172a;
+  background:#fef9c3;
+}
+.bottom-nav .center-btn{
+  background:#0f172a !important;
+  color:#fff !important;
+  width:56px; height:56px;
+  border-radius:50% !important;
+  margin-top:-28px;
+  font-size:24px;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
+  border:3px solid #fff;
+}
+.bottom-nav .center-btn span{
+  color:#fff;
+  font-size:10px;
+  margin-top:-2px;
+}
+
+/* DI HP: Sidebar sembunyi, Bottom Nav muncul, Kasih jarak bawah */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .main{margin-left:0;padding-bottom:90px}
+  .bottom-nav{display:flex}
+  .topbar{position:sticky;top:0;background:#f1f5f9;z-index:10;padding:10px 0}
+}
+
+/* DI LAPTOP: Bottom Nav sembunyi, Sidebar muncul */
+@media(min-width:769px){
+  .bottom-nav{display:none!important}
+     }
