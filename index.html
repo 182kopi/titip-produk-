@@ -1,1 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TITIPKU - Aplikasi Titip Produk Retail</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
 
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo"><div class="logo-icon">T</div><div><p class="logo-title">TITIPKU</p><p class="logo-sub">Retail Konsinyasi</p></div></div>
+  <div class="user-card"><div class="avatar">A</div><div><p id="nama-user">Admin</p><span>Administrator</span></div></div>
+  <nav id="main-nav">
+    <button data-page="dashboard" class="active">📊 Dashboard</button>
+    <button data-page="toko">🏪 Data Toko</button>
+    <button data-page="produk">📦 Data Produk</button>
+    <button data-page="titip">🤝 Titip Produk</button>
+    <button data-page="stok">📊 Stok & Opname</button>
+    <button data-page="jual">🛒 Penjualan / Kasir</button>
+    <button data-page="retur">↩️ Retur</button>
+    <button data-page="setoran">💳 Setoran & Piutang</button>
+    <button data-page="laporan">📈 Laporan</button>
+    <button data-page="backup">☁️ Backup</button>
+    <button data-page="pengaturan">⚙️ Pengaturan</button>
+  </nav>
+  <button class="btn btn-red" onclick="logout()">Keluar</button>
+</aside>
+
+<main class="main">
+  <header class="topbar"><div><h1 id="page-title">Dashboard</h1><p id="page-subtitle">Selamat datang di TITIPKU</p></div><div class="flex"><button class="btn btn-blue" onclick="backupNow()">☁️ Backup</button><button class="btn" onclick="showPage('titip')">+ Titip Baru</button></div></header>
+
+  <!-- DASHBOARD -->
+  <section id="page-dashboard" class="page active">
+    <div class="grid4">
+      <div class="card"><p class="muted">OMZET</p><h2 id="dash-omzet">Rp 0</h2><small id="dash-omzet-sub">0 transaksi</small></div>
+      <div class="card"><p class="muted">LABA BERSIH</p><h2 id="dash-laba" class="blue">Rp 0</h2></div>
+      <div class="card"><p class="muted">PIUTANG TOKO</p><h2 id="dash-piutang" class="orange">Rp 0</h2></div>
+      <div class="card"><p class="muted">TOTAL STOK</p><h2 id="dash-stok">0</h2><small id="dash-stok-sub">Gudang + Toko</small></div>
+    </div>
+    <div class="grid2 mt">
+      <div class="card"><h3>🏆 Toko Terbaik</h3><div id="top-toko" class="mt"></div></div>
+      <div class="card"><h3>🔥 Produk Terlaris</h3><div id="top-produk" class="mt"></div></div>
+    </div>
+    <div class="grid3 mt">
+      <div class="card"><h3>⚠️ Stok Menipis</h3><div id="alert-stok" class="mt small"></div></div>
+      <div class="card"><h3>📅 Titip Hari Ini</h3><div id="titip-hari-ini" class="mt small"></div></div>
+      <div class="card"><h3>💳 Setoran Belum Lunas</h3><div id="alert-piutang" class="mt small"></div></div>
+    </div>
+  </section>
+
+  <!-- TOKO -->
+  <section id="page-toko" class="page">
+    <div class="card"><h3>🏪 Data Toko - CRUD</h3><p class="small muted">Tambah toko baru, atur komisi per toko, edit & hapus.</p><button class="btn mt" onclick="openModal('modal-toko'); resetFormToko()">+ Tambah Toko</button></div>
+    <div class="flex mt"><input id="search-toko" placeholder="Cari toko / kota..." oninput="renderToko()"><select id="filter-toko-status" onchange="renderToko()"><option value="all">Semua Status</option><option>Aktif</option><option>Nonaktif</option></select></div>
+    <div id="list-toko" class="grid3 mt"></div>
+  </section>
+
+  <!-- PRODUK -->
+  <section id="page-produk" class="page">
+    <div class="card"><h3>📦 Data Produk - CRUD</h3><p class="small muted">Harga Modal, Harga Jual, Margin otomatis. Stok awal masuk gudang.</p><button class="btn mt" onclick="openModal('modal-produk'); resetFormProduk()">+ Tambah Produk</button></div>
+    <div class="flex mt"><input id="search-produk" placeholder="Cari produk / barcode..." oninput="renderProduk()"><select id="filter-kategori" onchange="renderProduk()"><option value="all">Semua Kategori</option><option>Makanan</option><option>Minuman</option><option>Snack</option><option>Kosmetik</option><option>Fashion</option><option>Lainnya</option></select></div>
+    <div id="list-produk" class="grid3 mt"></div>
+  </section>
+
+  <!-- TITIP -->
+  <section id="page-titip" class="page">
+    <div class="card"><h3>🤝 Titip Produk ke Toko</h3><div class="grid3 mt"><div><label>Toko</label><select id="titip-toko"></select></div><div><label>Produk</label><select id="titip-produk" onchange="updateTitipInfo()"></select></div><div><label>Jumlah Titip</label><input id="titip-jumlah" type="number" placeholder="10" oninput="updateTitipInfo()"></div><div><label>Tanggal</label><input id="titip-tgl" type="date"></div><div><label>Harga Jual di Toko (Opsional)</label><input id="titip-harga-jual" type="number" placeholder="Kosong = harga default"></div><div><label>Catatan</label><input id="titip-catatan" placeholder="Display depan / rak..."></div></div><div id="titip-info" class="info-box mt">Pilih toko & produk</div><button class="btn btn-blue mt" onclick="saveTitip()">Simpan Titip → Stok Gudang Berkurang</button></div>
+    <div class="card mt"><h3>Riwayat Titip</h3><div class="table-wrap"><table><thead><tr><th>Tgl</th><th>Toko</th><th>Produk</th><th>Jumlah</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="table-titip"></tbody></table></div></div>
+  </section>
+
+  <!-- STOK -->
+  <section id="page-stok" class="page">
+    <div class="grid3"><div class="card"><p class="muted">STOK GUDANG</p><h2 id="stok-gudang-total">0</h2></div><div class="card"><p class="muted">STOK DI TOKO</p><h2 id="stok-toko-total">0</h2></div><div class="card"><p class="muted">NILAI STOK GUDANG</p><h2 id="nilai-stok">Rp 0</h2></div></div>
+    <div class="card mt"><h3>📊 Stok per Toko</h3><div class="flex mt"><select id="stok-filter-toko" onchange="renderStok()"></select><input id="stok-search" placeholder="Cari produk..." oninput="renderStok()"></div><div class="table-wrap mt"><table><thead><tr><th>Produk</th><th>Toko</th><th>Stok</th><th>Harga Jual</th><th>Nilai</th><th>Aksi</th></tr></thead><tbody id="table-stok"></tbody></table></div></div>
+    <div class="card mt"><h3>🔍 Opname Stok Gudang</h3><div class="grid3 mt"><select id="opname-produk"></select><input id="opname-jumlah" type="number" placeholder="Stok Fisik"><input id="opname-ket" placeholder="Keterangan"></div><button class="btn btn-yellow mt" onclick="saveOpname()">Simpan Opname</button><div id="table-opname" class="mt small"></div></div>
+  </section>
+
+  <!-- JUAL -->
+  <section id="page-jual" class="page">
+    <div class="card"><h3>🛒 Penjualan / Kasir per Toko</h3><div class="grid3 mt"><div><label>Toko</label><select id="jual-toko" onchange="renderJualProduk()"></select></div><div><label>Cari Produk di Toko Itu</label><input id="jual-search" placeholder="Ketik nama produk..." oninput="renderJualProduk()"></div><div><label>Tanggal</label><input id="jual-tgl" type="date"></div></div><div id="list-jual-produk" class="grid3 mt"></div><div class="card mt" style="background:#fefce8"><h3>🧾 Keranjang</h3><div id="keranjang" class="mt small">Keranjang kosong</div><div id="keranjang-total" class="mt"></div><button class="btn btn-green mt" onclick="checkout()">Checkout → Kurangi Stok Toko</button></div></div>
+    <div class="card mt"><h3>Riwayat Penjualan</h3><div class="table-wrap"><table><thead><tr><th>Tgl</th><th>Toko</th><th>Produk</th><th>Qty</th><th>Total</th><th>Laba</th><th>Aksi</th></tr></thead><tbody id="table-jual"></tbody></table></div></div>
+  </section>
+
+  <!-- RETUR -->
+  <section id="page-retur" class="page">
+    <div class="card"><h3>↩️ Retur dari Toko ke Gudang</h3><div class="grid3 mt"><select id="retur-toko" onchange="loadReturProduk()"></select><select id="retur-produk"></select><input id="retur-jumlah" type="number" placeholder="Jumlah Retur"><select id="retur-alasan"><option>Rusak</option><option>Kadaluarsa</option><option>Tidak Laku</option><option>Salah Kirim</option></select><input id="retur-tgl" type="date"><input id="retur-ket" placeholder="Keterangan"></div><button class="btn btn-red mt" onclick="saveRetur()">Simpan Retur</button></div>
+    <div class="card mt"><h3>Riwayat Retur</h3><div class="table-wrap"><table><thead><tr><th>Tgl</th><th>Toko</th><th>Produk</th><th>Qty</th><th>Alasan</th><th>Aksi</th></tr></thead><tbody id="table-retur"></tbody></table></div></div>
+  </section>
+
+  <!-- SETORAN -->
+  <section id="page-setoran" class="page">
+    <div class="card"><h3>💳 Setoran & Piutang Toko</h3><div class="grid4 mt"><select id="setoran-toko"></select><input id="setoran-jumlah" type="number" placeholder="Jumlah Setor"><input id="setoran-tgl" type="date"><select id="setoran-metode"><option>Transfer</option><option>Cash</option><option>QRIS</option></select></div><button class="btn btn-green mt" onclick="saveSetoran()">Simpan Setoran</button></div>
+    <div class="card mt"><h3>Piutang per Toko (Omzet - Setoran - Komisi)</h3><div id="list-piutang" class="mt"></div></div>
+    <div class="card mt"><h3>Riwayat Setoran</h3><div class="table-wrap"><table><thead><tr><th>Tgl</th><th>Toko</th><th>Jumlah</th><th>Metode</th><th>Aksi</th></tr></thead><tbody id="table-setoran"></tbody></table></div></div>
+  </section>
+
+  <!-- LAPORAN -->
+  <section id="page-laporan" class="page">
+    <div class="grid4"><div class="card"><p class="muted">OMZET</p><h2 id="l-omzet" class="green">Rp 0</h2></div><div class="card"><p class="muted">MODAL</p><h2 id="l-modal" class="red">Rp 0</h2></div><div class="card"><p class="muted">KOMISI TOKO</p><h2 id="l-komisi" class="purple">Rp 0</h2></div><div class="card"><p class="muted">LABA BERSIH</p><h2 id="l-laba" class="blue">Rp 0</h2></div></div>
+    <div class="card mt"><h3>Omzet per Toko</h3><div id="laporan-toko" class="mt"></div></div>
+    <div class="card mt"><h3>Omzet per Produk</h3><div id="laporan-produk" class="mt"></div></div>
+    <div class="flex mt"><button class="btn btn-green" onclick="exportCSV()">📥 Export CSV</button><button class="btn btn-gray" onclick="window.print()">🖨️ Print</button></div>
+  </section>
+
+  <!-- BACKUP -->
+  <section id="page-backup" class="page"><div class="card"><h2>☁️ Backup & Restore</h2><div class="flex mt"><button class="btn" onclick="backupNow()">📥 Download Backup</button><button class="btn btn-yellow" onclick="backupToDrive()">☁️ Backup ke Drive</button><button class="btn btn-green" onclick="document.getElementById('file-restore').click()">📤 Restore</button><input type="file" id="file-restore" accept=".json" class="hidden" onchange="restoreFromFile(event)"></div><div id="backup-info" class="mt small"></div><div id="backup-history" class="mt small"></div></div></section>
+
+  <!-- PENGATURAN -->
+  <section id="page-pengaturan" class="page"><div class="grid2"><div class="card"><h3>🏢 Profil Usaha</h3><div class="mt flex-col"><label>Nama Usaha</label><input id="set-nama"><label>Alamat</label><input id="set-alamat"><label>WA</label><input id="set-wa"><label>Rekening</label><input id="set-rek"></div><button class="btn mt" onclick="savePengaturan()">Simpan</button></div><div class="card"><h3>⚙️ Aturan</h3><div class="mt flex-col"><label>Stok Minimum (Alert)</label><input id="set-min-stok" type="number"><label>Komisi Default %</label><input id="set-komisi" type="number"></div><button class="btn btn-yellow mt" onclick="savePengaturan()">Simpan Aturan</button><button class="btn btn-red mt" onclick="resetData()">Reset Semua Data</button></div></div></section>
+</main>
+
+<!-- MODALS -->
+<div id="modal-toko" class="modal"><div class="modal-box"><h3 id="modal-toko-title">Tambah Toko</h3><input type="hidden" id="toko-edit-id"><div class="grid2 mt"><input id="toko-nama" placeholder="Nama Toko *"><input id="toko-pemilik" placeholder="Nama Pemilik"><input id="toko-wa" placeholder="WA"><input id="toko-kota" placeholder="Kota / Alamat"><input id="toko-komisi" type="number" placeholder="Komisi % (misal 20)"><select id="toko-status"><option>Aktif</option><option>Nonaktif</option></select></div><div class="flex mt"><button class="btn" style="flex:1" onclick="saveToko()">Simpan</button><button class="btn btn-gray" onclick="closeModal('modal-toko')">Batal</button></div></div></div>
+<div id="modal-produk" class="modal"><div class="modal-box"><h3 id="modal-produk-title">Tambah Produk</h3><input type="hidden" id="produk-edit-id"><div class="grid2 mt"><input id="produk-nama" placeholder="Nama Produk *"><input id="produk-barcode" placeholder="Barcode / SKU"><select id="produk-kategori"><option>Makanan</option><option>Minuman</option><option>Snack</option><option>Kosmetik</option><option>Fashion</option><option>Lainnya</option></select><input id="produk-modal" type="number" placeholder="Harga Modal *"><input id="produk-jual" type="number" placeholder="Harga Jual *"><input id="produk-stok" type="number" placeholder="Stok Awal Gudang"></div><div class="flex mt"><button class="btn" style="flex:1" onclick="saveProduk()">Simpan</button><button class="btn btn-gray" onclick="closeModal('modal-produk')">Batal</button></div></div></div>
+   <!-- MENU BAWAH HP ALA GOFOOD -->
+<nav class="bottom-nav">
+  <button data-page="dashboard" class="active" onclick="showPage('dashboard')">📊<span>Home</span></button>
+  <button data-page="toko" onclick="showPage('toko')">🏪<span>Toko</span></button>
+  <button data-page="produk" onclick="showPage('produk')">📦<span>Produk</span></button>
+  <button data-page="titip" onclick="showPage('titip')" class="center-btn">🤝<span>Titip</span></button>
+  <button data-page="jual" onclick="showPage('jual')">🛒<span>Kasir</span></button>
+  <button data-page="laporan" onclick="showPage('laporan')">📈<span>Laporan</span></button>
+  <button data-page="pengaturan" onclick="showPage('pengaturan')">⚙️<span>Lainnya</span></button>
+</nav>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+                                                                                                                                                                                                                 </html>
